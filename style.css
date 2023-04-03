@@ -6,3 +6,7 @@ h2 {
 .negrita {
   font-weight: bold;
 }
+
+p {
+  margin: 20px;
+}
