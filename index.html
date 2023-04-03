@@ -109,9 +109,36 @@
   <p>En este último apartado queremos observar una comparativa de la distribución de los errores para una red neuronal sin entrenamiento y con entrenamiento. Este experimento tiene como objetivo la compresión de la distribución de errores antes y después de un entrenamiento bueno, para el conjunto de datos de entrenamiento y evaluación. Se trata de una gráfica de líneas donde cada línea representa un conjunto de entrenamiento concreto.</p>
   <p>Se generan 17 gráficas donde se dispondrán visualmente la distribución de los errores para cada uno de los 17 puntos que nuestra red neuronal tiene que identificar. La metodología consiste en usar la función histrogram de numpy con la opción densidad activada. Como resultado representaremos en el eje x el rango posible en el que se distribuye el error y en el eje y la probabilidad de densidad de que un error pertenezca a ese rango de error.</p>
   <h2>Resultados</h2>
+  <h3>Cuadro de mandos</h3>
   <p>
     <iframe title="Report Section" width="1000" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiYTM3ZWQ4OTItMzVmZC00ZGE3LThhNGItY2YxY2VhMTM5ZTY5IiwidCI6ImIyYmI3MzFjLTQ2MGQtNDIwZi1hNDc1LTNlZDYxNWE4Mjk4NyIsImMiOjh9" frameborder="0" allowFullScreen="true"></iframe>
+
+    
   </p>
-  <p></p>
+  <p>En la gráfica dinámica de Power Bi tenemos dos páginas.</p>
+  <p>En la primera página con título “Análisis del desempeño de la red con diferentes métodos de optimización” se hace un análisis del PCK frente al loss por cada batch de entrenamiento. Podemos filtrar por experimento y por época de entrenamiento. Adicionalmente podemos ver un promedio que nos ayudará a ver el desempeño tanto en Porcentaje de puntos clave detectados correctamente como el valor de Loss.</p>
+  <p>En la gráfica de la izquierda vemos el desempeño de la red neuronal para la evaluación. En general los valores de PCK aumentan a medida que el valor de Loss disminuye. Nuestra red neuronal esta generalizando correctamente. </p>
+  <p>En la gráfica de la derecha vemos el desempeño de la red neuronal para el entrenamiento. Observamos un comportamiento similar al de la recta de la izquierda.</p>
+  <p>Se puede observar que el mejor optimizador con diferencia es el SGD con Momentum alcanzando un 87% de PCK de promedio y en su última epoch un 94.6% para el conjunto de datos de evaluación. Los demás experimentos no ascienden de 70% de PCK y los valores de Loss son significativamente mayores.</p>
+  <p>Otra observación remarcable es que RMSP tiene un desempeño malísimo no superando el 10% de PCK en su última época.</p>
+  <p>Por lo tanto, el método de optimización que mejor desempeño tiene es el SGD con Momentum y es que se usará para la comparativa en la distribución de errores.</p>
+  <p>En la segunda página con título “Análisis del desempeño de la red en la estimación de los puntos de la cabeza durante el entrenamiento” analizamos el desempeño de la red neuronal al estimar la posición de tres puntos clave correspondientes a la cabeza de la mosca de la fruta. En esta ocasión también disponemos de un filtro que nos ayudará a elegir entre los diferentes experimentos realizados.</p>
+  <p>En la gráfica lineal de la derecha visualizamos como el error en las estimaciones para los tres puntos en general disminuye, eso significa que en efecto nuestra red neuronal esta aprendiendo a identificar correctamente los puntos. La línea en lila nos muestra si los errores cometidos están por encima o por debajo de la media.</p>
+  <p>En la gráfica lineal de la izquierda visualizamos el porcentaje de puntos claves correctamente identificados para los tres puntos que estamos analizando. La línea en lila nos muestra si el porcentaje de PCK está por encima o por debajo del promedio.</p>
+  <p>De este pequeño experimento podemos deducir que nuestra red está decrementando correctamente los errores para nuestro experimento SGD con momentum y además que se están estimando correctamente la totalidad de los puntos durante el entrenamiento casi desde la primera época. Con este segundo experimento reforzamos nuestra decisión tomada en el anterior apartado y además visualizamos información relevante de los tres puntos que se consideran más importantes en nuestra predicción.</p>
+  <h3>Distribución de errores</h3>
+  <p>Utilizando la librería de Python matplotlib.pyplot haremos el graficado de la distribución de error de los 17 puntos clave que nuestra red neuronal ha estimado. Para no saturar con tantas imágenes hemos decidido elegir un único punto (el del tórax) y visualizar su distribución. Los demás resultados estarán el github para su visualiación con el nombre de train15.png y notrain.png</p>
+  <p>A grandes rasgos recuperamos un conjunto de errores en la estimación usando RMSE donde usamos el valor real y el estimado para calcular el error para todas las imágenes del conjunto de datos. Posteriormente se calcula el rango de la distribución usando el percentil 99, mediante la función histogram de numpy calculamos para cada uno de los 17 puntos su distribución a lo largo de todos los rangos de la distribución y finalmente graficamos usando pyplot.</p>
+  <h4>Gráfica modelo sin entrenar</h4>
+  <img src="https://i.postimg.cc/QdN96K5q/tejn.png" height="600px" width="800px"></p>
+  Para eset punto concreto los errores son muy grandes y está fundamentalmente focalizados entre 130 y 150. Es un modelo que no está entrenado, es normal que sus fallos sean muy frecuentes en valores altos.
+  <h4>Gráfica modelo entrenado 15 epochs</h4>
+  <p><img src="https://i.postimg.cc/8CKhdB0W/tej.png" height="600px" width="800px">
+  Para este punto concreto tras 15 épocas de entrenamiento los errores son muy frecuentes en valores muy bajos entre 0 y 3. Vemos una gran diferencia con la gráfica anterior. Nuestro modelo ha entrenado correctamente tal y como suponíamos.
   <h2>Conclusión</h2>
+  <p>Partimos de un problema inicial donde queríamos obtener datos sobre como nuestra red neuronal estaba entrenando. A pesar de saber que lo normal es que la red neuronal aumente en PCK y disminuya en Error y Loss. Este proyecto nos ha brindado la oportunidad de comprobarlo a escalas de batchs, epochs y experimentos.
+  </p>
+  <p>Gracias a la herramienta de Power Bi pudimos visualizar de una forma muy dinámica resultados de desempeño de nuestra red para 4 diferentes métodos de optimización. Finalmente tras elegir SGD con Momentum destrozando el supuesto mejor como ADAM. Esto indica que aunque para un exeperimento pasado nos haya servido un método siempre conviene comprobarlo frente a otros métodos.</p>
+  <p>Tras elegir el método SGD con Momentum por tener el mejor desempeño adicionalmente usamos python para visualizar la distribución de los errores por punto antes y despues del entrenamiento para apreciar la diferencia.</p>
+  <p>Por último comentar que he aprendido mucho sobre herramienas de visualización y sobre métodos de  recopilación de información. Ha sido un experimento muy fructífero que va a servir como previa para el TFM.</p>
 </div>
